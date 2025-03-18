@@ -1,0 +1,22 @@
+﻿<Application
+    x:Class="SteamToys.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:SteamToys.Shared.Converters;assembly=SteamToys.Shared"
+    xmlns:local="clr-namespace:SteamToys"
+    Exit="OnExit"
+    Startup="OnStartup">
+    <Application.Resources>
+        <ResourceDictionary>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SteamToys;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SteamToys;component/Styles/Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SteamToys;component/Controls/Navigation/Styles/Navigation.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,231 @@
+﻿<UserControl
+    x:Class="SteamToys.Views.Pages.Dashboard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:helper="clr-namespace:SteamToys.Shared.Helper;assembly=SteamToys.Shared"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="CountTextBlock" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border
+            Padding="10"
+            Background="{DynamicResource ControlFillColorDefaultBrush}"
+            CornerRadius="8">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            Margin="0,0,20,0"
+                            Command="{Binding ViewModel.ImportAccountClickCommand}"
+                            Content="导入账号"
+                            Style="{StaticResource ButtonSuccess}" />
+                        <Button
+                            Grid.Column="1"
+                            Margin="20,0"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding ViewModel.StartClickCommand}"
+                            Content="开始"
+                            Style="{StaticResource ButtonPrimary}" />
+                        <Button
+                            Grid.Column="2"
+                            Margin="20,0"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding ViewModel.StopClickCommand}"
+                            Content="终止"
+                            Style="{StaticResource ButtonDanger}" />
+                        <Button
+                            Grid.Column="3"
+                            Margin="20,0"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding ViewModel.ExportClickCommand}"
+                            Content="导出Excel"
+                            Style="{StaticResource ButtonWarning}" />
+                    </Grid>
+                </StackPanel>
+                <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                    <StackPanel
+                        Margin="0,0,20,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock Text="绑定完成：" />
+                        <TextBlock
+                            Foreground="Green"
+                            Style="{StaticResource CountTextBlock}"
+                            Text="{Binding ViewModel.CompletedTotal}" />
+                    </StackPanel>
+                    <StackPanel
+                        Margin="20,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock Text="绑定失败：" />
+                        <TextBlock
+                            Foreground="Red"
+                            Style="{StaticResource CountTextBlock}"
+                            Text="{Binding ViewModel.FailedTotal}" />
+                    </StackPanel>
+                    <StackPanel
+                        Margin="20,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock Text="读验证码失败：" />
+                        <TextBlock
+                            Foreground="Red"
+                            Style="{StaticResource CountTextBlock}"
+                            Text="{Binding ViewModel.SmsCodeFailedTotal}" />
+                    </StackPanel>
+                    <StackPanel
+                        Margin="20,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock Text="读邮箱失败：" />
+                        <TextBlock
+                            Foreground="Red"
+                            Style="{StaticResource CountTextBlock}"
+                            Text="{Binding ViewModel.EmailboxFailedTotal}" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+
+        <DataGrid
+            Grid.Row="1"
+            hc:DataGridAttach.CanUnselectAllWithBlankArea="True"
+            hc:DataGridAttach.ShowRowNumber="False"
+            hc:DataGridAttach.ShowSelectAllButton="False"
+            AutoGenerateColumns="False"
+            HeadersVisibility="All"
+            ItemsSource="{Binding ViewModel.Accounts}"
+            RowHeaderWidth="60">
+            <!--<DataGrid.RowHeaderTemplate>   IsReadOnly="True"
+                <DataTemplate>
+                    <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
+                </DataTemplate>
+            </DataGrid.RowHeaderTemplate>-->
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="选择">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <CheckBox>
+                                <hc:Interaction.Triggers>
+                                    <hc:EventTrigger EventName="Checked">
+                                        <hc:EventToCommand Command="{Binding DataContext.ViewModel.DataGridSelectAllCheckedCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" PassEventArgsToCommand="True"/>
+                                    </hc:EventTrigger>
+                                    <hc:EventTrigger EventName="Unchecked">
+                                        <hc:EventToCommand Command="{Binding DataContext.ViewModel.DataGridSelectAllCheckedCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" PassEventArgsToCommand="True"/>
+                                    </hc:EventTrigger>
+                                </hc:Interaction.Triggers>
+                            </CheckBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsSelect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn
+                    Width="80"
+                    Binding="{Binding Id}"
+                    Header="ID"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Steam}"
+                    Header="账号"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding SteamPassword}"
+                    Header="密码"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Email}"
+                    Header="邮箱账号"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding EmailPassword}"
+                    Header="邮箱密码"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding BindStatus}"
+                    Header="绑定状态"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding SmsPlatform}"
+                    Header="短信平台"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding PhoneNumber}"
+                    Header="手机号码"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Captcha}"
+                    Header="验证码"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding RecoverCode}"
+                    Header="恢复码"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding QuoteUrl}"
+                    Header="报价链接"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding PrivacyInventory}"
+                    Header="库存状态"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding BindDateTime}"
+                    Header="绑定时间"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding ErrMessage}"
+                    Header="错误日志"
+                    IsReadOnly="True" />
+            </DataGrid.Columns>
+            <hc:Interaction.Triggers>
+                <hc:EventTrigger EventName="SelectionChanged">
+                    <hc:EventToCommand Command="{Binding ViewModel.DataGridRowSelectionChangedCommand}" PassEventArgsToCommand="True" />
+                </hc:EventTrigger>
+            </hc:Interaction.Triggers>
+        </DataGrid>
+
+        <!--  日志输出  -->
+        <Border Grid.Row="2">
+            <RichTextBox
+                Margin="0,8,0,0"
+                helper:RichTextBoxHelper.RichText="{Binding ViewModel.OutLogs}"
+                AcceptsReturn="True"
+                IsReadOnly="True"
+                VerticalScrollBarVisibility="Visible">
+                <RichTextBox.Document>
+                    <FlowDocument LineHeight="1">
+                        <Paragraph FontFamily="微软雅黑" />
+                    </FlowDocument>
+                </RichTextBox.Document>
+            </RichTextBox>
+        </Border>
+    </Grid>
+</UserControl>

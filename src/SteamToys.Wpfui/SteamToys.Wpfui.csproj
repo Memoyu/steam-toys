@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<ApplicationIcon>wpfui.ico</ApplicationIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="appsettings.json" />
+		<None Remove="appsettings.serilog.json" />
+		<None Remove="Resources\wpfui.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
+		<PackageReference Include="WPF-UI" Version="2.0.3" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="appsettings.serilog.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="wpfui.ico" />
+		<ProjectReference Include="..\SteamToys.Service\SteamToys.Service.csproj" />
+		<ProjectReference Include="..\SteamToys.Shared\SteamToys.Shared.csproj" />
+		<Resource Include="Resources\wpfui.png">
+			<CopyToOutputDirectory></CopyToOutputDirectory>
+		</Resource>
+	</ItemGroup>
+
+</Project>

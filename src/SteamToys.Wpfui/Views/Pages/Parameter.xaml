@@ -1,0 +1,391 @@
+﻿<ui:UiPage
+    x:Class="SteamToys.Wpfui.Views.Pages.Parameter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:SteamToys.Wpfui.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="Parameter"
+    d:DataContext="{d:DesignInstance local:Parameter,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <ui:UiPage.Resources>
+        <Style x:Key="TitleTextBlock" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+        </Style>
+
+        <Style x:Key="PartStackPanel" TargetType="StackPanel">
+            <Setter Property="Margin" Value="0,0,0,20" />
+        </Style>
+
+        <Style x:Key="CenterAlignmentStyle" TargetType="TextBlock">
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </ui:UiPage.Resources>
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical">
+                <!--  基本参数  -->
+                <StackPanel Style="{StaticResource PartStackPanel}">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="基本参数" />
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="线程数：" />
+                            <TextBox HorizontalContentAlignment="Center" Text="{Binding ViewModel.AppSettingVm.Thread}" />
+                        </StackPanel>
+
+                        <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="账户重试次数：" />
+                            <TextBox HorizontalContentAlignment="Center" Text="{Binding ViewModel.AppSettingVm.AccountRetry}" />
+                        </StackPanel>
+                        <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="请求重试次数：" />
+                            <TextBox HorizontalContentAlignment="Center" Text="{Binding ViewModel.AppSettingVm.RequestRetry}" />
+                        </StackPanel>
+                        <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="邮件验证等待：" />
+                            <TextBox HorizontalContentAlignment="Center" Text="{Binding ViewModel.AppSettingVm.WaitCodeTime}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding Path=ViewModel.WitCodeTimeTextChangedCommand}" CommandParameter="{Binding Text, RelativeSource={RelativeSource AncestorType={x:Type TextBox}}}" />
+
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Foreground="Gray"
+                                Text="{Binding ViewModel.TotalWaitCodeTime}" />
+                        </StackPanel>
+
+                        <ui:ToggleSwitch
+                            Margin="20,0,0,0"
+                            Content="获取报价链接"
+                            IsChecked="{Binding ViewModel.AppSettingVm.IsGetTradeoffers}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!--  Steam账户  -->
+                <StackPanel Style="{StaticResource PartStackPanel}">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="账户配置" />
+                    <StackPanel Orientation="Horizontal">
+                        <ui:ToggleSwitch Content="隐私设置" IsChecked="{Binding ViewModel.AppSettingVm.Privacy.IsSetPrivacy}" />
+
+                        <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="好友：" />
+                            <ComboBox
+                                DisplayMemberPath="Name"
+                                IsEnabled="{Binding ViewModel.AppSettingVm.Privacy.IsSetPrivacy}"
+                                ItemsSource="{Binding ViewModel.PrivacyTypes, Mode=OneWay}"
+                                SelectedValue="{Binding ViewModel.AppSettingVm.Privacy.FriendsList}"
+                                SelectedValuePath="Id" />
+                        </StackPanel>
+                        <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="库存：" />
+                            <ComboBox
+                                DisplayMemberPath="Name"
+                                IsEnabled="{Binding ViewModel.AppSettingVm.Privacy.IsSetPrivacy}"
+                                ItemsSource="{Binding ViewModel.PrivacyTypes, Mode=OneWay}"
+                                SelectedValue="{Binding ViewModel.AppSettingVm.Privacy.Inventory}"
+                                SelectedValuePath="Id" />
+                        </StackPanel>
+                        <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="礼物：" />
+                            <ComboBox
+                                DisplayMemberPath="Name"
+                                IsEnabled="{Binding ViewModel.AppSettingVm.Privacy.IsSetPrivacy}"
+                                ItemsSource="{Binding ViewModel.PrivacyTypes, Mode=OneWay}"
+                                SelectedValue="{Binding ViewModel.AppSettingVm.Privacy.InventoryGifts}"
+                                SelectedValuePath="Id" />
+                        </StackPanel>
+                        <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="游戏：" />
+                            <ComboBox
+                                DisplayMemberPath="Name"
+                                IsEnabled="{Binding ViewModel.AppSettingVm.Privacy.IsSetPrivacy}"
+                                ItemsSource="{Binding ViewModel.PrivacyTypes, Mode=OneWay}"
+                                SelectedValue="{Binding ViewModel.AppSettingVm.Privacy.OwnedGames}"
+                                SelectedValuePath="Id" />
+                        </StackPanel>
+                        <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="游戏时间：" />
+                            <ComboBox
+                                DisplayMemberPath="Name"
+                                IsEnabled="{Binding ViewModel.AppSettingVm.Privacy.IsSetPrivacy}"
+                                ItemsSource="{Binding ViewModel.PrivacyTypes, Mode=OneWay}"
+                                SelectedValue="{Binding ViewModel.AppSettingVm.Privacy.Playtime}"
+                                SelectedValuePath="Id" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <!--  接码  -->
+                <StackPanel Style="{StaticResource PartStackPanel}">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="接码平台" />
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="接码平台：" />
+                                <ComboBox
+                                    Name="SmsPaltformCb"
+                                    DisplayMemberPath="Name"
+                                    ItemsSource="{Binding ViewModel.SmsPlatforms, Mode=OneWay}"
+                                    SelectedValue="{Binding ViewModel.AppSettingVm.SmsConfig.Platform}"
+                                    SelectedValuePath="Id">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding ViewModel.SmsPlaformSelectionChangedCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="国家：" />
+                                <ComboBox
+                                    Name="SmsCountryCb"
+                                    DisplayMemberPath="Name"
+                                    ItemsSource="{Binding ViewModel.SmsCountries, Mode=OneWay}"
+                                    SelectedValue="{Binding ViewModel.AppSettingVm.SmsConfig.Country}"
+                                    SelectedValuePath="ITCode">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding ViewModel.SmsCountrySelectionChangedCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="项目：" />
+                                <ComboBox
+                                    Name="SmsServiceCb"
+                                    DisplayMemberPath="Name"
+                                    ItemsSource="{Binding ViewModel.SmsServices, Mode=OneWay}"
+                                    SelectedValue="{Binding ViewModel.AppSettingVm.SmsConfig.Service}"
+                                    SelectedValuePath="Id">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding ViewModel.SmsServiceSelectionChangedCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Grid Margin="0,10,0,0">
+                            <Grid.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+                                <Style BasedOn="{StaticResource DefaultTextBoxStyle}" TargetType="TextBox">
+                                    <Setter Property="Margin" Value="0,8,0,0" />
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Sms Activate ApiKey：" />
+                            <TextBox
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                Text="{Binding ViewModel.AppSettingVm.SmsConfig.SmsActivateApiKey}" />
+
+                            <TextBlock Grid.Row="1" Text="Online Sim ApiKey：" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                Text="{Binding ViewModel.AppSettingVm.SmsConfig.OnlineSimApiKey}" />
+
+                            <TextBlock Grid.Row="2" Text="5 Sim ApiKey：" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                Text="{Binding ViewModel.AppSettingVm.SmsConfig.FiveSimApiKey}" />
+
+
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+
+                <!--  邮箱  -->
+                <StackPanel Style="{StaticResource PartStackPanel}">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="验证邮箱" />
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="邮箱协议：" />
+                            <ComboBox
+                                Name="EmailboxProtoCb"
+                                DisplayMemberPath="Name"
+                                ItemsSource="{Binding ViewModel.EmailboxProtos, Mode=OneWay}"
+                                SelectedValue="{Binding ViewModel.AppSettingVm.EmailboxConfig.Protocol}"
+                                SelectedValuePath="Id" />
+                        </StackPanel>
+
+                        <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="邮箱前缀：" />
+                            <TextBox Width="70" Text="{Binding ViewModel.AppSettingVm.EmailboxConfig.Prefix}" />
+                        </StackPanel>
+                        <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="邮箱端口：" />
+                            <TextBox
+                                Width="70"
+                                HorizontalContentAlignment="Center"
+                                Text="{Binding ViewModel.AppSettingVm.EmailboxConfig.Port}" />
+                        </StackPanel>
+
+                        <ui:ToggleSwitch
+                            Margin="20,0,0,0"
+                            Content="启用SSL"
+                            IsChecked="{Binding ViewModel.AppSettingVm.EmailboxConfig.IsSsl}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!--  输出  -->
+                <StackPanel Style="{StaticResource PartStackPanel}">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="文件输出路径" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="输出路径：" />
+                        <TextBlock
+                            MaxWidth="700"
+                            VerticalAlignment="Center"
+                            Text="{Binding ViewModel.AppSettingVm.OutputPath}"
+                            TextTrimming="CharacterEllipsis" />
+                        <ui:Button
+                            Margin="20,0,0,0"
+                            Appearance="Success"
+                            Command="{Binding ViewModel.CopyPathClickCommand}"
+                            Content="复制路径" />
+                        <ui:Button
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Stretch"
+                            Appearance="Primary"
+                            Command="{Binding ViewModel.SelectedPathClickCommand}"
+                            Content="选择路径" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!--  代理  -->
+                <StackPanel Style="{StaticResource PartStackPanel}">
+                    <StackPanel Margin="0,0,0,20" Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource TitleTextBlock}" Text="代理解析" />
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                VerticalAlignment="Bottom"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="(每行为一个代理，代理信息以 : 分割)" />
+                        </StackPanel>
+                        <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="代理协议：" />
+                            <ComboBox
+                                Name="ProxyTypeCb"
+                                DisplayMemberPath="Name"
+                                ItemsSource="{Binding ViewModel.ProxyTypes, Mode=OneWay}"
+                                SelectedValue="{Binding ViewModel.AppSettingVm.ProxyConfig.ProxyType}"
+                                SelectedValuePath="Id" />
+                        </StackPanel>
+                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            Height="200"
+                            MinHeight="200"
+                            AcceptsReturn="True"
+                            Text="{Binding ViewModel.ProxyStr}" />
+                        <StackPanel
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Orientation="Vertical">
+                            <ui:Button
+                                Grid.Column="1"
+                                Margin="8"
+                                Appearance="Primary"
+                                Command="{Binding ViewModel.AnalyzeProxyClickCommand}"
+                                Content="解析" />
+                            <ui:Button
+                                Grid.Column="1"
+                                Margin="8"
+                                Appearance="Danger"
+                                Command="{Binding ViewModel.DeleteProxyClickCommand}"
+                                Content="清除" />
+                        </StackPanel>
+                        <ui:DataGrid
+                            Grid.Column="2"
+                            Height="200"
+                            AutoGenerateColumns="False"
+                            IsReadOnly="True"
+                            ItemsSource="{Binding ViewModel.AppSettingVm.Proxies}">
+                            <ui:DataGrid.Resources>
+                                <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                </Style>
+                            </ui:DataGrid.Resources>
+                            <ui:DataGrid.Columns>
+                                <DataGridTextColumn
+                                    Width="130"
+                                    Binding="{Binding Ip}"
+                                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                                    Header="IP" />
+                                <DataGridTextColumn
+                                    Width="70"
+                                    Binding="{Binding Port}"
+                                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                                    Header="端口" />
+                                <DataGridTextColumn
+                                    Width="100"
+                                    Binding="{Binding Username}"
+                                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                                    Header="账号" />
+                                <DataGridTextColumn
+                                    Width="130"
+                                    Binding="{Binding Password}"
+                                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                                    Header="密码" />
+                                <DataGridComboBoxColumn
+                                    DisplayMemberPath="Name"
+                                    Header="代理协议"
+                                    ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.ViewModel.ProxyTypes}"
+                                    SelectedValueBinding="{Binding ProxyType}"
+                                    SelectedValuePath="Id" />
+                            </ui:DataGrid.Columns>
+                        </ui:DataGrid>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+        <Border Grid.Row="1">
+            <ui:Button
+                Margin="0,8,0,0"
+                HorizontalAlignment="Center"
+                Appearance="Success"
+                Command="{Binding ViewModel.SaveParameterClickCommand}"
+                Content="保存配置" />
+        </Border>
+    </Grid>
+</ui:UiPage>

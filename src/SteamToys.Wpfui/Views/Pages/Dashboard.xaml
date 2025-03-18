@@ -1,0 +1,237 @@
+﻿<ui:UiPage
+    x:Class="SteamToys.Wpfui.Views.Pages.Dashboard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="clr-namespace:SteamToys.Shared.Helper;assembly=SteamToys.Shared"
+    xmlns:local="clr-namespace:SteamToys.Wpfui.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="Dashboard"
+    d:DataContext="{d:DesignInstance local:Dashboard,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <ui:UiPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="CenterAlignmentStyle" TargetType="TextBlock">
+                <Setter Property="Margin" Value="8,0,8,0" />
+                <Setter Property="TextAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="CountTextBlock" TargetType="TextBlock">
+
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+            <DataTemplate x:Key="CheckBoxDataTemplate">
+                <CheckBox
+                    Uid="{Binding Id}"
+                    Margin="9,0,9,0"
+                    IsChecked="{Binding IsSelect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </DataTemplate>
+
+            <Style
+                x:Key="CheckBoxStyle"
+                BasedOn="{StaticResource DefaultDataGridCellStyle}"
+                TargetType="{x:Type DataGridCell}">
+                <Setter Property="ContentTemplate" Value="{StaticResource CheckBoxDataTemplate}" />
+            </Style>
+        </ResourceDictionary>
+    </ui:UiPage.Resources>
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border
+            Padding="10"
+            Background="{DynamicResource ControlFillColorDefaultBrush}"
+            CornerRadius="8">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ui:Button
+                            Margin="0,0,20,0"
+                            Appearance="Success"
+                            Command="{Binding ViewModel.ImportAccountClickCommand}"
+                            Content="导入账号" />
+                        <ui:Button
+                            Grid.Column="1"
+                            Margin="20,0"
+                            HorizontalAlignment="Stretch"
+                            Appearance="Primary"
+                            Command="{Binding ViewModel.StartClickCommand}"
+                            Content="开始" />
+                        <ui:Button
+                            Grid.Column="2"
+                            Margin="20,0"
+                            HorizontalAlignment="Stretch"
+                            Appearance="Danger"
+                            Command="{Binding ViewModel.StopClickCommand}"
+                            Content="终止" />
+                        <ui:Button
+                            Grid.Column="3"
+                            Margin="20,0"
+                            HorizontalAlignment="Stretch"
+                            Appearance="Caution"
+                            Command="{Binding ViewModel.ExportClickCommand}"
+                            Content="导出Excel" />
+                    </Grid>
+                </StackPanel>
+                <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                    <StackPanel
+                        Margin="0,0,20,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock Text="绑定完成：" />
+                        <TextBlock
+                            Foreground="Green"
+                            Style="{StaticResource CountTextBlock}"
+                            Text="{Binding ViewModel.CompletedTotal}" />
+                    </StackPanel>
+                    <StackPanel
+                        Margin="20,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock Text="绑定失败：" />
+                        <TextBlock
+                            Foreground="Red"
+                            Style="{StaticResource CountTextBlock}"
+                            Text="{Binding ViewModel.FailedTotal}" />
+                    </StackPanel>
+                    <StackPanel
+                        Margin="20,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock Text="读验证码失败：" />
+                        <TextBlock
+                            Foreground="Red"
+                            Style="{StaticResource CountTextBlock}"
+                            Text="{Binding ViewModel.SmsCodeFailedTotal}" />
+                    </StackPanel>
+                    <StackPanel
+                        Margin="20,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock Text="读邮箱失败：" />
+                        <TextBlock
+                            Foreground="Red"
+                            Style="{StaticResource CountTextBlock}"
+                            Text="{Binding ViewModel.EmailboxFailedTotal}" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+
+        <!--  账号列表  -->
+        <ui:DataGrid
+            Grid.Row="1"
+            Margin="0,8,0,0"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+            ItemsSource="{Binding ViewModel.Accounts}">
+            <ui:DataGrid.Resources>
+                <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                </Style>
+            </ui:DataGrid.Resources>
+            <ui:DataGrid.Columns>
+                <DataGridCheckBoxColumn
+                    Width="40"
+                    CellStyle="{StaticResource CheckBoxStyle}"
+                    Header="选择">
+                    <DataGridCheckBoxColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <CheckBox Command="{Binding Path=DataContext.ViewModel.AllSelectCheckedCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" IsChecked="{Binding Path=DataContext.ViewModel.IsAllSelect, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Mode=TwoWay}" />
+                        </DataTemplate>
+                    </DataGridCheckBoxColumn.HeaderTemplate>
+                </DataGridCheckBoxColumn>
+                <DataGridTextColumn
+                    Binding="{Binding Id}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="Id" />
+                <DataGridTextColumn
+                    Binding="{Binding Steam}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="账号" />
+                <DataGridTextColumn
+                    Binding="{Binding SteamPassword}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="密码" />
+                <DataGridTextColumn
+                    Binding="{Binding Email}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="邮箱账号" />
+                <DataGridTextColumn
+                    Binding="{Binding EmailPassword}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="邮箱密码" />
+                <DataGridTextColumn
+                    Binding="{Binding BindStatus}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="绑定状态" />
+                <DataGridTextColumn
+                    Binding="{Binding SmsPlatform}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="短信平台" />
+                <DataGridTextColumn
+                    Binding="{Binding PhoneNumber}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="手机号码" />
+                <DataGridTextColumn
+                    Binding="{Binding Captcha}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="验证码" />
+                <DataGridTextColumn
+                    Binding="{Binding RecoverCode}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="恢复码" />
+                <DataGridTextColumn
+                    Binding="{Binding QuoteUrl}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="报价链接" />
+                <DataGridTextColumn
+                    Binding="{Binding PrivacyInventory}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="库存状态" />
+
+                <DataGridTextColumn
+                    Binding="{Binding BindDateTime}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="绑定时间" />
+                <DataGridTextColumn
+                    Binding="{Binding ErrMessage}"
+                    ElementStyle="{StaticResource CenterAlignmentStyle}"
+                    Header="错误日志" />
+            </ui:DataGrid.Columns>
+        </ui:DataGrid>
+
+        <!--  日志输出  -->
+        <Border Grid.Row="2">
+            <RichTextBox
+                Margin="0,8,0,0"
+                helper:RichTextBoxHelper.RichText="{Binding ViewModel.OutLogs}"
+                AcceptsReturn="True"
+                IsReadOnly="True"
+                VerticalScrollBarVisibility="Visible">
+                <RichTextBox.Document>
+                    <FlowDocument LineHeight="1">
+                        <Paragraph FontFamily="微软雅黑" />
+                    </FlowDocument>
+                </RichTextBox.Document>
+            </RichTextBox>
+        </Border>
+    </Grid>
+</ui:UiPage>
